@@ -24,6 +24,13 @@ train_A = cPickle.load(open('train_A'))
 train_B = cPickle.load(open('train_B'))
 to_predicted = cPickle.load(open('pre'))
 
+# plot data
+plt.subplot(121).scatter(train_A[:, 0], train_A[:, 1], color='', marker='o', edgecolors='r', s=50)
+plt.subplot(121).scatter(train_B[:, 0], train_B[:, 1], color='', marker='o', edgecolors='b', s=50)
+plt.subplot(121).scatter(to_predicted[:, 0], to_predicted[:, 1], color='', marker='s', edgecolors='k', s=50)
+plt.xlim([0, 40])
+plt.ylim([0, 40])
+plt.legend(['Class A', 'Class B'])
 
 # prepare training data
 # [1, 0] for class A
@@ -61,7 +68,7 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
     train_idx = 0
-    while train_idx <= 5000:
+    while train_idx <= 10000:
         train_idx = train_idx + 1
         sess.run(trainer, feed_dict={input_layer: train_data_input,
                                      ref: train_data_output})
@@ -72,19 +79,20 @@ with tf.Session() as sess:
 
 
 
-# plot
-plt.scatter(train_A[:, 0], train_A[:, 1], color='', marker='o', edgecolors='r', s=50)
-plt.scatter(train_B[:, 0], train_B[:, 1], color='', marker='o', edgecolors='b', s=50)
+# plot ANN fitting results
+plt.subplot(122).scatter(train_A[:, 0], train_A[:, 1], color='', marker='o', edgecolors='r', s=50)
+plt.subplot(122).scatter(train_B[:, 0], train_B[:, 1], color='', marker='o', edgecolors='b', s=50)
 
 for i in range(to_predicted.shape[0]):
     if prediction[i, 0] >= prediction[i, 1]:
-        plt.scatter(to_predicted[i, 0], to_predicted[i, 1], color='', marker='s', edgecolors='r', s=50)
+        plt.subplot(122).scatter(to_predicted[i, 0], to_predicted[i, 1], color='', marker='s', edgecolors='r', s=50)
     else:
-        plt.scatter(to_predicted[i, 0], to_predicted[i, 1], color='', marker='s', edgecolors='b', s=50)
+        plt.subplot(122).scatter(to_predicted[i, 0], to_predicted[i, 1], color='', marker='s', edgecolors='b', s=50)
 
 
 plt.xlim([0, 40])
 plt.ylim([0, 40])
 plt.legend(['Class A', 'Class B'])
-plt.savefig('classification.pdf')
+
+
 plt.show()

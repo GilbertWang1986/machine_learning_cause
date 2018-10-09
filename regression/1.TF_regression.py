@@ -24,6 +24,7 @@ train_data = cPickle.load(open('reg'))
 train_x = train_data[:, 0].reshape(-1, 1)
 train_y = train_data[:, 1].reshape(-1, 1)
 
+plt.subplot(121).scatter(train_x, train_y, color='', marker='o', edgecolors='r', s=50)
 
 
 # Build the network 
@@ -53,13 +54,13 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
     train_idx = 0
-    while train_idx <= 20000:
+    while train_idx <= 5000:
         train_idx = train_idx + 1
         sess.run(trainer, feed_dict={input_layer: train_x,
                                      ref: train_y})
 
     
-    to_predicted = np.linspace(2.0, 10.0, 50).reshape(-1, 1)
+    to_predicted = np.linspace(2.0, 10.0, 100).reshape(-1, 1)
     prediction = sess.run(output_layer, feed_dict={input_layer: to_predicted})
 
 
@@ -67,8 +68,7 @@ with tf.Session() as sess:
 
 
 # plot
-plt.scatter(train_x, train_y, color='', marker='o', edgecolors='r', s=50)
-
-plt.scatter(to_predicted, prediction, color='', marker='s', edgecolors='b', s=50)
+plt.subplot(122).scatter(train_x, train_y, color='', marker='o', edgecolors='r', s=50)
+plt.subplot(122).plot(to_predicted, prediction, 'b')
 
 plt.show()
